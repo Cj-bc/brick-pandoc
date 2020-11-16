@@ -61,3 +61,16 @@ block (LineBlock inlineses)                                          = withAttr 
 block (CodeBlock attr txt)                                           = withAttr codeBlock $ highlight (getLanguage attr) txt
 block (RawBlock format txt)                                          = withAttr rawBlock  $ B.txt txt  -- TODO: use format somehow
 block (BlockQuote blocks)                                            = withAttr blockquote $ vBox $ map block blocks
+
+
+-- | Make all keys lower case so that we can look up easily
+defaultSyntaxMap' :: SyntaxMap
+defaultSyntaxMap' = mapKeys . map toLower $ defaultSyntaxMap
+
+-- | Get language Syntax from Pandoc's CodeBlock attribute
+--
+-- Note that this isn't completed yet, because there will be some inconsistent spellings
+-- and this doesn't support it yet.
+getLanguage :: P.Attr -> Maybe S.Syntax
+getLanguage (_, cls, _) = foldl1 (\x y -> if isJust y then y else x) $ map (flip lookup defaultSyntaxMap' . toLower) cls
+
