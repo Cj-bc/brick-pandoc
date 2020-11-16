@@ -23,6 +23,8 @@ dependencies:
 - base >= 4.7 && < 5
 - brick >= 0.57
 - pandoc-types >= 1.22
+- brick-skylighting
+- skylighting
 
 library:
   source-dirs: src

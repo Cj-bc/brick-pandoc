@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 643cdd40f1ded69819137b1325eb4e17792288cd0a2b0405956adcb737ad2409
+-- hash: b5e27af4621fc0dc951ad3b026b831130c349b6ba52c41ed0c11f569c5f4d914
 
 name:           brick-pandoc
 version:        0.1.0.0
@@ -35,7 +35,9 @@ library
   build-depends:
       base >=4.7 && <5
     , brick >=0.57
+    , brick-skylighting
     , pandoc-types >=1.22
+    , skylighting
   default-language: Haskell2010
 
 executable brick-pandoc-exe
@@ -49,7 +51,9 @@ executable brick-pandoc-exe
       base >=4.7 && <5
     , brick >=0.57
     , brick-pandoc
+    , brick-skylighting
     , pandoc-types >=1.22
+    , skylighting
   default-language: Haskell2010
 
 test-suite brick-pandoc-test
@@ -64,5 +68,7 @@ test-suite brick-pandoc-test
       base >=4.7 && <5
     , brick >=0.57
     , brick-pandoc
+    , brick-skylighting
     , pandoc-types >=1.22
+    , skylighting
   default-language: Haskell2010
