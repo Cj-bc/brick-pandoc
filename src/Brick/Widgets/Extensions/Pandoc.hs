@@ -20,6 +20,9 @@ citation    = "citation"
 code        = "code"
 math        = "math"
 image       = "image"
+paragraph   = "paragraph"
+blockquote  = "blockquote"
+codeBlock   = "codeBlock"
 
 -- | Convert 'Text.Pandoc.Definition.Inline' into 'Brick.Type.Widget'
 --
@@ -50,3 +53,11 @@ inline (Image attr inlines (link, title))  = withAttr image $ W.hyperlink link  
 inline (Note        blocks)                = hBox $ map block blocks  -- TODO: is this correct usage of 'Note'?
 inline (Span        attr inlines)          = hBox $ map inline inlines -- todo: use 'attr'; should we add new 'attrname' for span?
 
+
+block :: Pandoc.Block -> Brick.Widget n
+block (Plain inlines)                                                = vBox $ map inline inlines
+block (Para inlines)                                                 = withAttr paragraph $ vBox $ map inline inlines
+block (LineBlock inlineses)                                          = withAttr lineblock $ hBox . map inline <$> inlineses
+block (CodeBlock attr txt)                                           = withAttr codeBlock $ highlight (getLanguage attr) txt
+block (RawBlock format txt)                                          = withAttr rawBlock  $ B.txt txt  -- TODO: use format somehow
+block (BlockQuote blocks)                                            = withAttr blockquote $ vBox $ map block blocks
