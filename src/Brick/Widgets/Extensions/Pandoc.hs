@@ -61,6 +61,27 @@ block (LineBlock inlineses)                                          = withAttr 
 block (CodeBlock attr txt)                                           = withAttr codeBlock $ highlight (getLanguage attr) txt
 block (RawBlock format txt)                                          = withAttr rawBlock  $ B.txt txt  -- TODO: use format somehow
 block (BlockQuote blocks)                                            = withAttr blockquote $ vBox $ map block blocks
+block (OrderedList listAttr blockses)                                = withAttr orderedlist  $ zipWith zipFunc (createNumber listAttr) $ fmap block blockses
+    where
+        numberlist DefaultStyle = numberlist Decimal
+        numberlist Example      = numberlist Decimal
+        numberlist Decimal      = show <$> [0,1..]
+        numberlist LowerRoman   = iterate (++ "i") "i"
+        numberlist UpperRoman   = iterate (++ "I") "I"
+        numberlist LowerAlpha   = pure <$> ['a'..'z']
+        numberlist UpperAlpha   = pure <$> ['A'..'Z']
+        -- | Create infinite list of list head
+        createNumber :: ListAttribute -> [Text]
+        createNumber (start, style, delim) = let (delim1, delm2) = case delim of
+                                                            DefaultDelim -> ("",".")
+                                                            Period       -> ("",".")
+                                                            OneParen     -> ("",")")
+                                                            TwoParens    -> ("(",")")
+                                             in fmap (\i -> delim1 ++ i ++ delim2) $ drop (start - 1) (numberlist style)
+        -- | zip two
+        zipFunc :: (Text, Widget n) -> Widget n
+        zipFunc (t, w) = hBox [B.txt t, w]
+block (BulletList [blocks])                                          = withAttr bulletList $ vBox fmap (hBox $ B.txt "- " : block) blocks
 
 
 -- | Make all keys lower case so that we can look up easily
