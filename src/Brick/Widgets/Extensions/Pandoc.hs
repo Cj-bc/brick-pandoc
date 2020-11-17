@@ -81,7 +81,7 @@ block (OrderedList listAttr blockses)                                = withAttr 
         -- | zip two
         zipFunc :: (Text, Widget n) -> Widget n
         zipFunc (t, w) = hBox [B.txt t, w]
-block (BulletList [blocks])                                          = withAttr bulletList $ vBox fmap (hBox $ B.txt "- " : block) blocks
+block (BulletList blockses)                                          = withAttr bulletList $ vBox fmap (hBox $ B.txt "- " : block) blockses
 
 
 -- | Make all keys lower case so that we can look up easily
