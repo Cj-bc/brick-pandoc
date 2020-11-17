@@ -23,6 +23,9 @@ image       = "image"
 paragraph   = "paragraph"
 blockquote  = "blockquote"
 codeBlock   = "codeBlock"
+definitionList = "definitionList"
+term        = "term"
+definition  = "definition"
 
 -- | Convert 'Text.Pandoc.Definition.Inline' into 'Brick.Type.Widget'
 --
@@ -82,6 +85,11 @@ block (OrderedList listAttr blockses)                                = withAttr 
         zipFunc :: (Text, Widget n) -> Widget n
         zipFunc (t, w) = hBox [B.txt t, w]
 block (BulletList blockses)                                          = withAttr bulletList $ vBox fmap (hBox $ B.txt "- " : block) blockses
+block (DefinitionList defs)                                          = withAttr definitionList $ vBox $ map mkdef defs
+    where
+        mkdef :: ([P.Inline], [[Block]]) -> Widget n
+        mkdef (term, definitions) = vBox $ withAttr term . hBox $ map inline term
+                                           : map (withAttr definition . vBox . map block) definitions
 
 
 -- | Make all keys lower case so that we can look up easily
